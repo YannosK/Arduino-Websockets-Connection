@@ -4,6 +4,8 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
+void PrintRawData(void);
+
 byte mac[] = {0x00, 0xAD, 0xBE, 0xEF, 0xFE, 0x02};
 
 //Setting static IP settings in case DHCP fails
@@ -25,7 +27,9 @@ bool printWebData = true;  // will print everything the client gets, if true
 
 //setting up the button
 int sensorValue = 0;
-int old_sensorValue = 0;
+int button = 0;
+int old_button = 0;
+
 
 void setup() {
   Serial.begin(115200);
@@ -73,6 +77,8 @@ void setup() {
     Serial.println("connection failed");
   }
 
+  
+
   //setting up a button
   pinMode(A5, INPUT);
   pinMode(A0, OUTPUT);
@@ -81,6 +87,47 @@ void setup() {
 
 
 void loop() {
+  PrintRawData();
+
+  sensorValue = analogRead(A5);
+  if (sensorValue>1000)
+  {
+    button = 1;
+  }
+  else
+  {
+    button = 0;
+  }
+
+  
+  /*
+  if(old_button != button) {
+    if (sensorValue>1000) Serial.println("Mute channel 1");
+    if (sensorValue<1000) Serial.println("Unmute channel 1");
+    old_button = button;
+  }
+  */
+  
+
+  if (sensorValue>1000)
+  {
+    //client.println("SETD^i.0.mute^1"); //mutes channel 1
+    Serial.println("Channel 1 muted");
+    delay(250);
+  }
+  
+  /*
+  if (sensorValue<1000)
+  {
+    client.println("SETD^i.0.mute^0"); //unmutes channel 1
+    delay(250);  
+  }
+  */
+  
+}
+
+
+void PrintRawData(){
   // if there are incoming bytes available from the server, read them and print them
   
   //client.available() Returns the number of bytes available for reading
@@ -107,26 +154,4 @@ void loop() {
       delay(1);
     }
   }
-
-  sensorValue = analogRead(A5);
-
-  if(old_sensorValue = sensorValue) {
-    if (sensorValue>1000) Serial.println("Mute channel 1");
-    if (sensorValue<1000) Serial.println("Unmute channel 1");
-    old_sensorValue = sensorValue;
-  }
-
-  if (sensorValue>1000)
-  {
-    client.println("SETD^i.0.mute^1"); //mutes channel 1
-    delay(250);
-  }
-  
-  /*
-  if (sensorValue<1000)
-  {
-    client.println("SETD^i.0.mute^0"); //unmutes channel 1
-    delay(250);  
-  }
-  */
 }
