@@ -25,10 +25,10 @@ EthernetClient client;
 
 bool printWebData = true;  // will print everything the client gets, if true
 
-//setting up the button
-int sensorValue = 0;
-int button = 0;
-int old_button = 0;
+//Add some pins to test (making sure they are not used with the shield)
+int inPin = 7;   // pushbutton connected to digital pin 7
+int val = 0;     // variable to store the read value
+int oldval=0;     //variable to store old val 
 
 
 void setup() {
@@ -76,54 +76,20 @@ void setup() {
     // if you didn't get a connection to the server:
     Serial.println("connection failed");
   }
-
-  
-
-  //setting up a button
-  pinMode(A5, INPUT);
-  pinMode(A0, OUTPUT);
-  digitalWrite(A0, HIGH);
 }
 
 
 void loop() {
   PrintRawData();
 
-  sensorValue = analogRead(A5);
-  if (sensorValue>1000)
-  {
-    button = 1;
-  }
-  else
-  {
-    button = 0;
-  }
-
-  
-  /*
-  if(old_button != button) {
-    if (sensorValue>1000) Serial.println("Mute channel 1");
-    if (sensorValue<1000) Serial.println("Unmute channel 1");
-    old_button = button;
-  }
-  */
-  
-
-  if (sensorValue>1000)
-  {
-    //client.println("SETD^i.0.mute^1"); //mutes channel 1
-    Serial.println("Channel 1 muted");
-    delay(250);
-  }
-  
-  /*
-  if (sensorValue<1000)
-  {
-    client.println("SETD^i.0.mute^0"); //unmutes channel 1
-    delay(250);  
-  }
-  */
-  
+  //read the pins we need here
+       val = digitalRead(inPin);   // read the input pin
+           if (oldval != val) {          //check if the value is the same, we don't want multiple sends
+                Serial.println(val);
+                oldval=val;             // Make the old value same as the new value
+           if (val == 1) client.println("SETD^i.0.mute^1") ; // Send SETD Mute with NEW LINE
+           if (val == 0) client.println("SETD^i.0.mute^0") ;
+                              }  
 }
 
 
