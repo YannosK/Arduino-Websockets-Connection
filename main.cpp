@@ -14,12 +14,14 @@ IPAddress myDns(192, 168, 100, 254);
 
 //ui24 will be the server
 IPAddress server(192, 168, 100, 198);  // numeric IP for ui24 (assigned via DHCP)
-//char server[] = "ui.io";    // name address for Soundcraft GUI
+//char server[] = "ui.io/mixer";    // name address for Soundcraft GUI
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
 // that you want to connect to (port 80 is default for HTTP):
 EthernetClient client;
+
+bool printWebData = true;  // will print everything the client gets, if true
 
 void setup() {
   Serial.begin(57600);
@@ -81,6 +83,9 @@ void loop() {
     byte buffer[512];
     if (len > 512) len = 512;
     client.read(buffer, len); //Read the next byte received from the server the client is connected to
+    if (printWebData) {
+      Serial.write(buffer, len); // show in the serial monitor (slows some boards)
+    }
   }
 
   // if the server's disconnected, stop the client:
