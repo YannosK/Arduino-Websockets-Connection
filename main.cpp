@@ -1,32 +1,28 @@
+//see ReadMe in .git
+
 #include <Arduino.h>
 #include <SPI.h>
 #include <Ethernet.h>
 
 byte mac[] = {0x00, 0xAD, 0xBE, 0xEF, 0xFE, 0x02};
+
+//Setting static IP settings in case DHCP fails
 IPAddress ip(192, 168, 100, 55);
-// gateway, DNS and subnet are optional:
 IPAddress gateway(192, 168, 100, 1);
 IPAddress subnet(255, 255, 255, 0);
 IPAddress myDns(192, 168, 100, 254);
 
-/*
-EthernetServer creates a server that listens to a port
-telnet defaults to port 23
-*/
-EthernetServer server(23);
+//ui24 will be the server
+IPAddress server(192, 168, 100, 198);  // numeric IP for ui24 (assigned via DHCP)
+//char server[] = "ui.io";    // name address for Soundcraft GUI
 
-// whether or not you got a message from the client yet
-bool gotAMessage = false; 
-
+// Initialize the Ethernet client library
+// with the IP address and port of the server
+// that you want to connect to (port 80 is default for HTTP):
+EthernetClient client;
 
 void setup() {
-  /*
-  You can use Ethernet.init(pin) to configure the CS pin
-  Ethernet.init(10);  // Most Arduino shields
-  Ethernet.init(33);  // ESP32 with Adafruit FeatherWing Ethernet
-  */
-
-  Serial.begin(9600);
+  Serial.begin(57600);
 
   // start the Ethernet connection:
   Serial.println("\nTrying to get an IP address using DHCP");
@@ -50,31 +46,51 @@ void setup() {
   Serial.print("My IP address: ");
   Serial.println(Ethernet.localIP());
 
-  // start listening for clients
-  server.begin();
+  // give the Ethernet shield a second to initialize:
+  delay(1000);
+
+  //connecting to ui24
+  Serial.print("connecting to ");
+  Serial.print(server);
+  Serial.println("...");
+
+  // if you get a connection, report back via serial:
+  if (client.connect(server, 80)) {
+    Serial.print("connected to ");
+    Serial.println(client.remoteIP()); //Returns the IP address of the client
+
+    // Make a HTTP request:
+    client.println("GET /raw HTTP/1.1\n\n");
+  }
+  else {
+    // if you didn't get a connection to the server:
+    Serial.println("connection failed");
+  }
 }
 
 
 void loop() {
-  // wait for a new client. server.available() gets a client that is connected to the server and has data available for reading
-  EthernetClient client = server.available();
+  // if there are incoming bytes available from the server, read them and print them
+  
+  //client.available() Returns the number of bytes available for reading
+  //that is, the amount of data that has been written to the client by the server it is connected to  
+  int len = client.available();
 
-  // when the client sends the first byte, say hello:
-  if (client) {
-    if (!gotAMessage) {
-      Serial.println("We have a new client");
-      //client.println prints data to the server a client is connected to.
-      client.println("Hello, client!");
-      Serial.println("\nThe client says:");
-      gotAMessage = true;
+  //setting up a read-print buffer:
+  if (len > 0) {
+    byte buffer[512];
+    if (len > 512) len = 512;
+    client.read(buffer, len); //Read the next byte received from the server the client is connected to
+  }
+
+  // if the server's disconnected, stop the client:
+  if (!client.connected()) {
+    Serial.println();
+    Serial.println("Server disconnected, stopping the session.");
+    client.stop();
+    // do nothing forevermore:
+    while (true) {
+      delay(1);
     }
-
-    // read the bytes incoming from the client:
-    char thisChar = client.read();
-    // echo the bytes back to the client:
-    // server.write() writes data to all the clients connected to a server.
-    //server.write(thisChar);
-    Serial.print(thisChar);
-    Ethernet.maintain();
   }
 }
