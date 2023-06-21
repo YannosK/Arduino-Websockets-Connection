@@ -23,9 +23,6 @@ EthernetClient client;
 
 bool printWebData = true;  // will print everything the client gets, if true
 
-//setting up the button
-int sensorValue = 0;
-int old_sensorValue = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -72,11 +69,6 @@ void setup() {
     // if you didn't get a connection to the server:
     Serial.println("connection failed");
   }
-
-  //setting up a button
-  pinMode(A5, INPUT);
-  pinMode(A0, OUTPUT);
-  digitalWrite(A0, HIGH);
 }
 
 
@@ -107,26 +99,4 @@ void loop() {
       delay(1);
     }
   }
-
-  sensorValue = analogRead(A5);
-
-  if(old_sensorValue = sensorValue) {
-    if (sensorValue>1000) Serial.println("Mute channel 1");
-    if (sensorValue<1000) Serial.println("Unmute channel 1");
-    old_sensorValue = sensorValue;
-  }
-
-  if (sensorValue>1000)
-  {
-    client.println("SETD^i.0.mute^1"); //mutes channel 1
-    delay(250);
-  }
-  
-  /*
-  if (sensorValue<1000)
-  {
-    client.println("SETD^i.0.mute^0"); //unmutes channel 1
-    delay(250);  
-  }
-  */
 }
