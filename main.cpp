@@ -9,10 +9,9 @@ void PrintRawData(void);
 byte mac[] = {0x00, 0xAD, 0xBE, 0xEF, 0xFE, 0x02};
 
 //Setting static IP settings in case DHCP fails
-IPAddress ip(192, 168, 100, 55);
-IPAddress gateway(192, 168, 100, 1);
+IPAddress ip(192, 168, 10, 15);
+IPAddress gateway(192, 168, 10, 1);
 IPAddress subnet(255, 255, 255, 0);
-IPAddress myDns(192, 168, 100, 254);
 
 //ui24 will be the server
 IPAddress server(192, 168, 100, 198);  // numeric IP for ui24 (assigned via DHCP)
@@ -26,13 +25,16 @@ EthernetClient client;
 bool printWebData = true;  // will print everything the client gets, if true
 
 //setting up the button
-int sensorValue = 0;
-int button = 0;
-int old_button = 0;
+int inPin = 7;
+int val = 0;
+int oldval=0;
 
 
 void setup() {
   Serial.begin(115200);
+
+  // Setup the pin to read
+   pinMode(inPin, INPUT);
 
   // start the Ethernet connection:
   Serial.println("\nTrying to get an IP address using DHCP");
@@ -74,56 +76,24 @@ void setup() {
   }
   else {
     // if you didn't get a connection to the server:
-    Serial.println("connection failed");
+    Serial.println("Failed at connecting to server");
   }
-
-  
-
-  //setting up a button
-  pinMode(A5, INPUT);
-  pinMode(A0, OUTPUT);
-  digitalWrite(A0, HIGH);
 }
 
 
 void loop() {
   PrintRawData();
 
-  sensorValue = analogRead(A5);
-  if (sensorValue>1000)
-  {
-    button = 1;
-  }
-  else
-  {
-    button = 0;
-  }
+  // read the input pin
+  val = digitalRead(inPin);
 
-  
-  /*
-  if(old_button != button) {
-    if (sensorValue>1000) Serial.println("Mute channel 1");
-    if (sensorValue<1000) Serial.println("Unmute channel 1");
-    old_button = button;
-  }
-  */
-  
-
-  if (sensorValue>1000)
-  {
-    //client.println("SETD^i.0.mute^1"); //mutes channel 1
-    Serial.println("Channel 1 muted");
-    delay(250);
-  }
-  
-  /*
-  if (sensorValue<1000)
-  {
-    client.println("SETD^i.0.mute^0"); //unmutes channel 1
-    delay(250);  
-  }
-  */
-  
+  //check if the value is the same, we don't want multiple sends
+  if (oldval != val) {
+    Serial.println(val);
+    oldval=val;// Make the old value same as the new value
+    if (val == 1) client.println("SETD^i.0.mute^1") ; // Send SETD Mute with NEW LINE
+    if (val == 0) client.println("SETD^i.0.mute^0") ;
+  }  
 }
 
 
