@@ -24,7 +24,7 @@ EthernetClient client;
 bool printWebData = true;  // will print everything the client gets, if true
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(115200);
 
   // start the Ethernet connection:
   Serial.println("\nTrying to get an IP address using DHCP");
