@@ -51,7 +51,7 @@ void setup() {
       Serial.println("Ethernet cable is not connected.");
     }
     // initialize the Ethernet device not using DHCP:
-    Ethernet.begin(mac, ip, myDns, gateway, subnet);
+    Ethernet.begin(mac, ip, gateway, subnet);
   }
 
   // print your local IP address:
