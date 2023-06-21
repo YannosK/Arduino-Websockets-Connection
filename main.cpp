@@ -14,7 +14,7 @@ IPAddress gateway(192, 168, 10, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 //ui24 will be the server
-IPAddress server(192, 168, 100, 198);  // numeric IP for ui24 (assigned via DHCP)
+IPAddress server(192, 168, 10, 5);  // numeric IP for ui24 (assigned via DHCP)
 //char server[] = "ui.io/mixer";    // name address for Soundcraft GUI
 
 // Initialize the Ethernet client library
