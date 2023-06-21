@@ -31,15 +31,15 @@ byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
-IPAddress server(192,168,0,44);  // numeric IP for  Ui24  (no DNS)
+IPAddress server(192,168,100,198);  // numeric IP for  Ui24  (no DNS)
 //char server[] = "Ui.IO";    // name address if we would use Ui.IO for example not connected via Ethernet
 
 // It's still better to know the IP address
 
 
 // Set the static IP address to use if the DHCP fails to assign
-IPAddress ip(192, 168, 0, 142); 
-IPAddress myDns(192, 168, 0, 1);  // This does not really matter in this situation 
+IPAddress ip(192, 168, 100, 75); 
+IPAddress myDns(192, 168, 100, 1);  // This does not really matter in this situation 
 
 // Initialize the Ethernet client library
 // with the IP address and port of the server
