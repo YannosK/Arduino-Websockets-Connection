@@ -25,16 +25,20 @@ EthernetClient client;
 bool printWebData = true;  // will print everything the client gets, if true
 
 //setting up the button
-int inPin = 7;
-int val = 0;
-int oldval=0;
+int pin_snap1 = 7;
+int pin_snap2 = 8;
+int val1 = 0;
+int val2 = 0;
+int oldval1=0;
+int oldval2=0;
 
 
 void setup() {
   Serial.begin(115200);
 
   // Setup the pin to read
-   pinMode(inPin, INPUT);
+   pinMode(pin_snap1, INPUT);
+   pinMode(pin_snap2, INPUT);
 
   // start the Ethernet connection:
   Ethernet.begin(mac, ip, gateway, subnet);
@@ -67,18 +71,26 @@ void setup() {
 
 
 void loop() {
-  PrintRawData();
+  //PrintRawData();
+  
+  val1 = digitalRead(pin_snap1);
+  val2 = digitalRead(pin_snap2);
+  
+  if (oldval1 != val1) {
+    oldval1 = val1;
+    if (val1 == 1) {
+      client.println("LOADSNAPSHOT^Show 1^Snap 1.1");
+      Serial.println("Snap 1.1");
+    }
+  }
 
-  // read the input pin
-  val = digitalRead(inPin);
-
-  //check if the value is the same, we don't want multiple sends
-  if (oldval != val) {
-    Serial.println(val);
-    oldval=val;// Make the old value same as the new value
-    if (val == 1) client.println("SETD^i.0.mute^1") ; // Send SETD Mute with NEW LINE
-    if (val == 0) client.println("SETD^i.0.mute^0") ;
-  }  
+  if (oldval2 != val2) {    
+    oldval2 = val2;
+    if (val2 == 1) {
+      client.println("LOADSNAPSHOT^Show 1^Snap 1.2");
+      Serial.println(val2);
+    }
+  }
 }
 
 
