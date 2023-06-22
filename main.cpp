@@ -26,8 +26,8 @@ bool printWebData = true;  // will print everything the client gets, if true
 
 //setting up the buttons
 //will use pins 2 to 9 (8 pins)
-int pin_snap1 = 2;
-int pin_snap2 = 3;
+//int pin_snap1 = 2;
+//int pin_snap2 = 3;
 int pin_snap3 = 4;
 int pin_snap4 = 5;
 int pin_snap5 = 6;
@@ -56,8 +56,8 @@ void setup() {
   Serial.begin(115200);
 
   // Setup the pins to read
-   pinMode(pin_snap1, INPUT);
-   pinMode(pin_snap2, INPUT);
+   //pinMode(pin_snap1, INPUT);
+   //pinMode(pin_snap2, INPUT);
    pinMode(pin_snap3, INPUT);
    pinMode(pin_snap4, INPUT);
    pinMode(pin_snap5, INPUT);
@@ -98,8 +98,8 @@ void setup() {
 void loop() {
   PrintRawData();
   
-  val1 = digitalRead(pin_snap1);
-  val2 = digitalRead(pin_snap2);
+  //val1 = digitalRead(pin_snap1);
+  //val2 = digitalRead(pin_snap2);
   val3 = digitalRead(pin_snap3);
   val4 = digitalRead(pin_snap4);
   val5 = digitalRead(pin_snap5);
@@ -107,6 +107,7 @@ void loop() {
   val7 = digitalRead(pin_snap7);
   val8 = digitalRead(pin_snap8);
   
+  /*
   if (oldval1 != val1) {
     oldval1 = val1;
     if (val1 == 1) {
@@ -122,6 +123,7 @@ void loop() {
       Serial.println("Snap 1.2");
     }
   }
+  */
 
   if (oldval3 != val3) {
     oldval3 = val3;
