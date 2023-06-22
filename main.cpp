@@ -71,7 +71,7 @@ void setup() {
 
 
 void loop() {
-  //PrintRawData();
+  PrintRawData();
   
   val1 = digitalRead(pin_snap1);
   val2 = digitalRead(pin_snap2);
