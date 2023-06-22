@@ -25,14 +25,15 @@ EthernetClient client;
 bool printWebData = true;  // will print everything the client gets, if true
 
 //setting up the buttons
-int pin_snap1 = 1;
-int pin_snap2 = 2;
-int pin_snap3 = 3;
-int pin_snap4 = 4;
-int pin_snap5 = 5;
-int pin_snap6 = 6;
-int pin_snap7 = 7;
-int pin_snap8 = 8;
+//will use pins 2 to 9 (8 pins)
+int pin_snap1 = 2;
+int pin_snap2 = 3;
+int pin_snap3 = 4;
+int pin_snap4 = 5;
+int pin_snap5 = 6;
+int pin_snap6 = 7;
+int pin_snap7 = 8;
+int pin_snap8 = 9;
 int val1 = 0;
 int val2 = 0;
 int val3 = 0;
